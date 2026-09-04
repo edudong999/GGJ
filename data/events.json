@@ -1,0 +1,145 @@
+[
+  {
+    "id": "lockdown",
+    "title": "封城",
+    "description": "城市按下暂停键。窗外传来零星的喇叭声,小区门口的红色警戒线已经拉好。接下来怎么办?",
+    "options": [
+      {
+        "text": "囤积物资",
+        "effects": {"supplies": 20, "mood": -5},
+        "result": "你冲去超市搬回三箱泡面和两袋米。妻子看你满头大汗的样子,叹了口气。"
+      },
+      {
+        "text": "相信政府,安心在家",
+        "effects": {"mood": 10, "harmony": 5},
+        "result": "一家四口围坐在客厅,女儿趴在窗台上数对面的楼有几层。妈妈泡了一壶茶。"
+      },
+      {
+        "text": "赶紧把家人接回来",
+        "effects": {"harmony": 15, "supplies": -5},
+        "result": "你开车绕了大半个城,把岳母接了过来。家里更挤了,但更暖了。"
+      }
+    ]
+  },
+  {
+    "id": "talk_heart",
+    "title": "谈心",
+    "description": "孩子贪玩是天性,作为父亲,你要负好责任。你打开小儿子的房门。",
+    "trigger": {"attribute": "mood", "min": 60},
+    "options": [
+      {
+        "text": "跟他说清楚利害关系",
+        "effects": {"mood": -10, "son_crisis": 0, "talked_with_son": 1},
+        "result": "你口干舌燥,也不知道他听进去了多少。本来想结合未来用心教育,却变成一场说教。儿子没有顶嘴,但也没多少回应。"
+      },
+      {
+        "text": "结合自身经验好好讲讲",
+        "effects": {"mood": 5, "son_crisis": 0, "talked_with_son": 1},
+        "result": "你告诉儿子,他虽然还小,但已经是一个男人了。结合多年经历,你希望他能懂。父亲不善言辞,但你是个善于沟通的爸爸。"
+      },
+      {
+        "text": "给他脸了,揍他一顿",
+        "effects": {"mood": -20, "harmony": -10},
+        "result": "小兔崽子天天不学好,一进来发现他又在打游戏!你实在忍不下去了,家庭开始了一场棍棒教育,鸡飞狗跳整层楼都听到了。"
+      }
+    ]
+  },
+  {
+    "id": "cake",
+    "title": "蛋糕",
+    "description": "妻子用矿泉水瓶做成的简易打蛋器配合着电饭煲,做出了封城这么久以来家里人吃的第一顿零嘴。",
+    "trigger": {"attribute": "mood", "max": 40},
+    "options": [
+      {
+        "text": "端着盘子递给还在赌气的儿子",
+        "effects": {"mood": 15, "supplies": -10, "immunity": 5, "son_crisis": 1},
+        "result": "今晚不在乎网课、考勤和线上测试,只是疫情中彼此依偎的家庭。"
+      },
+      {
+        "text": "真香!大家都尝尝",
+        "effects": {"mood": 5, "supplies": -10, "immunity": 5},
+        "result": "除了儿子,所有人都享受了这来之不易的一餐。妻子兴致盎然,你知道她不会只做这一次的。"
+      },
+      {
+        "text": "每个人都有份!",
+        "requires": {"attribute": "talked_with_son", "equals": 1},
+        "effects": {"mood": 5, "immunity": 5},
+        "result": "打蛋清真的很麻烦,在没有合适道具的情况下。但是大家分工合作,成果也属于了每个人。"
+      }
+    ]
+  },
+  {
+    "id": "ask_help",
+    "title": "社区求助",
+    "description": "我们的物资不算贫乏,但也不怎么阔绰。女儿正是长身体的时间,没点营养可不行。你感觉她更容易累了,或许我们需要一顿像样的饭。",
+    "trigger": {"attribute": "immunity", "max": 40},
+    "options": [
+      {
+        "text": "在社区群里求助",
+        "effects": {},
+        "result": "",
+        "branches": [
+          {
+            "requires": {"attribute": "harmony", "min": 60},
+            "effects": {"mood": 15, "immunity": 15},
+            "result": "18楼的住户很快就回复了,他们家把一条鲫鱼放在了家门口。鱼汤很鲜美,这是一顿愉快的晚饭。看到女儿脸颊浮现出久违的笑容,你努力盘算着下一次还能送什么做回礼。"
+          },
+          {
+            "requires": {"attribute": "harmony", "max": 40},
+            "effects": {"mood": -10},
+            "result": "你在社区群里问了问,不过消息没有任何回应。过了一天,就被接龙消息刷过去了。"
+          }
+        ]
+      },
+      {
+        "text": "物资短缺,总得敷衍一顿",
+        "effects": {"mood": 5, "supplies": -5},
+        "result": "妻子给土豆换了换花样,用土豆泥,我们又敷衍了一顿。"
+      }
+    ]
+  },
+  {
+    "id": "online_class",
+    "title": "网课",
+    "description": "儿子的网课又要开始了,老师在群里点名,你听到耳机里传来游戏音效。怎么办?",
+    "options": [
+      {
+        "text": "陪孩子一起听,做笔记",
+        "effects": {"mood": 5, "son_crisis": 0},
+        "result": "你搬了把椅子坐在儿子旁边,意外发现数学老师讲的题还挺有意思。儿子被盯着,只能老老实实听完。"
+      },
+      {
+        "text": "让妈妈辅导",
+        "effects": {"mood": -5, "supplies": -5},
+        "result": "妈妈放下手里的活,戴上老花镜坐在电脑前。晚饭晚了一个小时,大家饿得咕咕叫。"
+      },
+      {
+        "text": "让孩子自己学",
+        "effects": {"son_crisis": 1, "mood": 5},
+        "result": "你关上房门,继续处理工作邮件。希望儿子能自觉,但心里总有些不踏实。"
+      }
+    ]
+  },
+  {
+    "id": "supply_delivery",
+    "title": "物资配送",
+    "description": "小区群里通知,今天下午有政府配送的蔬菜包,数量有限。先到先得。",
+    "options": [
+      {
+        "text": "参加社区团购,加点钱买更多",
+        "effects": {"supplies": 15, "harmony": -5},
+        "result": "你抢到了两份蔬菜包,新鲜水灵。团长还多送了一袋土豆,说是感谢你之前帮忙搬东西。"
+      },
+      {
+        "text": "下楼排队去买",
+        "effects": {"supplies": 10, "immunity": -5},
+        "result": "排了四十分钟队,脚都站麻了。回来的时候有点咳嗽,妻子让你赶紧喝热水。"
+      },
+      {
+        "text": "不出门,等下次",
+        "effects": {"mood": -5, "immunity": 5},
+        "result": "你在群里回复 '不要了',关上手机。家里还剩点挂面,凑合几天吧。"
+      }
+    ]
+  }
+]
