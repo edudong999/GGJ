@@ -5,7 +5,10 @@
 ## 玩法
 
 - **属性**：心情 / 和睦 / 免疫 / 物资,初始均为 50,范围 0–100
-- **回合**：共 20 轮,每轮 3 个事件
+- **回合**：共 20 轮,每轮从 3 个池子各抽 1 个事件:
+  - **家庭池** (`family`):谈心、蛋糕、网课
+  - **物资池** (`supplies`):封城、物资配送
+  - **社区池** (`community`):社区求助
 - **胜负**：走完 20 轮且属性 > 0 → 胜利;任一属性 ≤ 0 → 失败
 - **特殊标记**：`小儿子学业危机` 跟踪儿子学业状态;`是否与儿子谈心` 跨轮持续,影响后续蛋糕事件的可选项
 
@@ -31,6 +34,7 @@ data/events.json      # 事件数据(可独立编辑)
 ```json
 {
   "id": "your_event_id",
+  "pool": "family",
   "title": "事件标题",
   "description": "事件描述",
   "trigger": {"attribute": "mood", "min": 60},
@@ -43,6 +47,8 @@ data/events.json      # 事件数据(可独立编辑)
   ]
 }
 ```
+
+`pool` 必填,值必须是 `family` / `supplies` / `community` 之一。
 
 支持的 effects: `mood` / `harmony` / `immunity` / `supplies` / `son_crisis` / `talked_with_son`
 trigger 和 requires 支持: `min` / `max` / `equals`

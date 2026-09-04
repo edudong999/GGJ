@@ -3,6 +3,7 @@ extends Node
 # 游戏核心状态,作为 autoload 单例运行
 
 const MAX_ROUNDS: int = 20
+const POOLS: Array = ["family", "supplies", "community"]
 
 var round: int = 1
 var mood: int = 50        # 心情值
@@ -53,14 +54,15 @@ func start_new_game() -> void:
 
 
 func pick_round_events() -> void:
-	var available: Array = []
-	for ev in events:
-		if _check_trigger(ev):
-			available.append(ev)
-	available.shuffle()
 	current_round_events = []
-	for i in range(min(3, available.size())):
-		current_round_events.append(available[i])
+	for pool_name in POOLS:
+		var available: Array = []
+		for ev in events:
+			if ev.get("pool", "") == pool_name and _check_trigger(ev):
+				available.append(ev)
+		if available.size() > 0:
+			available.shuffle()
+			current_round_events.append(available[0])
 
 
 func _check_trigger(ev: Dictionary) -> bool:

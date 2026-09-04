@@ -1,6 +1,7 @@
 [
   {
     "id": "lockdown",
+    "pool": "supplies",
     "title": "封城",
     "description": "城市按下暂停键。窗外传来零星的喇叭声,小区门口的红色警戒线已经拉好。接下来怎么办?",
     "options": [
@@ -23,6 +24,7 @@
   },
   {
     "id": "talk_heart",
+    "pool": "family",
     "title": "谈心",
     "description": "孩子贪玩是天性,作为父亲,你要负好责任。你打开小儿子的房门。",
     "trigger": {"attribute": "mood", "min": 60},
@@ -46,6 +48,7 @@
   },
   {
     "id": "cake",
+    "pool": "family",
     "title": "蛋糕",
     "description": "妻子用矿泉水瓶做成的简易打蛋器配合着电饭煲,做出了封城这么久以来家里人吃的第一顿零嘴。",
     "trigger": {"attribute": "mood", "max": 40},
@@ -70,6 +73,7 @@
   },
   {
     "id": "ask_help",
+    "pool": "community",
     "title": "社区求助",
     "description": "我们的物资不算贫乏,但也不怎么阔绰。女儿正是长身体的时间,没点营养可不行。你感觉她更容易累了,或许我们需要一顿像样的饭。",
     "trigger": {"attribute": "immunity", "max": 40},
@@ -100,6 +104,7 @@
   },
   {
     "id": "online_class",
+    "pool": "family",
     "title": "网课",
     "description": "儿子的网课又要开始了,老师在群里点名,你听到耳机里传来游戏音效。怎么办?",
     "options": [
@@ -122,6 +127,7 @@
   },
   {
     "id": "supply_delivery",
+    "pool": "supplies",
     "title": "物资配送",
     "description": "小区群里通知,今天下午有政府配送的蔬菜包,数量有限。先到先得。",
     "options": [
