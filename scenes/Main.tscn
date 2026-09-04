@@ -75,17 +75,62 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="ResultLabel" type="Label" parent="Margin/VBox"]
+[node name="SettlementPanel" type="PanelContainer" parent="Margin/VBox"]
+visible = false
 layout_mode = 2
-text = ""
-theme_override_font_sizes/font_size = 16
-autowrap_mode = 3
+size_flags_vertical = 3
 
-[node name="HintLabel" type="Label" parent="Margin/VBox"]
+[node name="SettlementVBox" type="VBoxContainer" parent="Margin/VBox/SettlementPanel"]
 layout_mode = 2
-text = "选择本轮发生的事件"
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.65, 0.65, 0.7, 1)
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+text = "第 1 轮 · 结算"
+
+[node name="HSep1" type="HSeparator" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+layout_mode = 2
+
+[node name="EventInfo" type="Label" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+horizontal_alignment = 1
+text = "事件: ...\n你的选择: ..."
+
+[node name="HSep2" type="HSeparator" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+layout_mode = 2
+
+[node name="Result" type="Label" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 17
+horizontal_alignment = 1
+text = "(结果)"
+
+[node name="HSep3" type="HSeparator" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+layout_mode = 2
+
+[node name="DiffsTitle" type="Label" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "属性变化:"
+
+[node name="Diffs" type="Label" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "(无变化)"
+
+[node name="HSep4" type="HSeparator" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+layout_mode = 2
+
+[node name="ContinueBtn" type="Button" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "继续 →"
+theme_override_font_sizes/font_size = 18
 
 [node name="EndOverlay" type="Panel" parent="."]
 visible = false
