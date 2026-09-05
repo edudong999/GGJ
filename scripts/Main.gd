@@ -200,31 +200,49 @@ func _render_attributes() -> void:
 		var box := PanelContainer.new()
 		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var vbox := VBoxContainer.new()
-		vbox.add_theme_constant_override("separation", 2)
+		vbox.add_theme_constant_override("separation", 4)
 		box.add_child(vbox)
 
 		var name_label := Label.new()
 		name_label.text = GameState.get_attribute_label(key)
 		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		name_label.add_theme_font_size_override("font_size", 16)
+		name_label.add_theme_font_size_override("font_size", 15)
 		vbox.add_child(name_label)
 
 		var value: int = GameState[key]
+		var color: Color = _attr_color(value)
+
 		var value_label := Label.new()
 		value_label.text = "%d" % value
 		value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		value_label.add_theme_font_size_override("font_size", 26)
-		value_label.add_theme_color_override("font_color", _attr_color(value))
+		value_label.add_theme_color_override("font_color", color)
 		vbox.add_child(value_label)
 
-		var filled_count: int = value / 5
-		var empty_count: int = (100 - value) / 5
-		var bar_label := Label.new()
-		bar_label.text = "█".repeat(filled_count) + "░".repeat(empty_count)
-		bar_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		bar_label.add_theme_font_size_override("font_size", 12)
-		vbox.add_child(bar_label)
+		var bar := ProgressBar.new()
+		bar.min_value = 0
+		bar.max_value = 100
+		bar.value = value
+		bar.show_percentage = false
+		bar.custom_minimum_size = Vector2(0, 10)
 
+		var bg_style := StyleBoxFlat.new()
+		bg_style.bg_color = Color(0.18, 0.18, 0.22)
+		bg_style.corner_radius_top_left = 3
+		bg_style.corner_radius_top_right = 3
+		bg_style.corner_radius_bottom_left = 3
+		bg_style.corner_radius_bottom_right = 3
+		bar.add_theme_stylebox_override("background", bg_style)
+
+		var fill_style := StyleBoxFlat.new()
+		fill_style.bg_color = color
+		fill_style.corner_radius_top_left = 3
+		fill_style.corner_radius_top_right = 3
+		fill_style.corner_radius_bottom_left = 3
+		fill_style.corner_radius_bottom_right = 3
+		bar.add_theme_stylebox_override("fill", fill_style)
+
+		vbox.add_child(bar)
 		attr_row.add_child(box)
 
 
