@@ -3,31 +3,41 @@ extends Control
 const EVENTS_PER_ROUND: int = 3
 const ATTRS: Array = ["mood", "harmony", "immunity", "supplies"]
 
-@onready var round_label: Label = $Margin/VBox/TopBar/RoundLabel
-@onready var mood_label: Label = $Margin/VBox/StatusBar/MoodLabel
-@onready var harmony_label: Label = $Margin/VBox/StatusBar/HarmonyLabel
-@onready var immunity_label: Label = $Margin/VBox/StatusBar/ImmunityLabel
-@onready var supplies_label: Label = $Margin/VBox/StatusBar/SuppliesLabel
-@onready var events_bar: HBoxContainer = $Margin/VBox/EventsBar
-@onready var settlement_panel: PanelContainer = $Margin/VBox/SettlementPanel
-@onready var settlement_title: Label = $Margin/VBox/SettlementPanel/SettlementVBox/Title
-@onready var settlement_event_info: Label = $Margin/VBox/SettlementPanel/SettlementVBox/EventInfo
-@onready var settlement_result: Label = $Margin/VBox/SettlementPanel/SettlementVBox/Result
-@onready var settlement_diffs: Label = $Margin/VBox/SettlementPanel/SettlementVBox/Diffs
-@onready var continue_button: Button = $Margin/VBox/SettlementPanel/SettlementVBox/ContinueBtn
-@onready var end_overlay: Panel = $EndOverlay
-@onready var end_label: Label = $EndOverlay/EndVBox/EndLabel
-@onready var restart_button: Button = $EndOverlay/EndVBox/RestartButton
+@onready var main_scene: Panel = $MainScene
+@onready var day_label: Label = $MainScene/Margin/VBox/DayLabel
+@onready var family_status_box: VBoxContainer = $MainScene/Margin/VBox/FamilyStatus
+@onready var attributes_box: VBoxContainer = $MainScene/Margin/VBox/Attributes
 
-var event_panels: Array = []  # [{panel, title, desc, options_container}]
+@onready var card_list: Panel = $CardList
+@onready var card_list_day_label: Label = $CardList/Margin/VBox/TopBar/DayLabel
+@onready var card_list_attr_label: Label = $CardList/Margin/VBox/TopBar/AttrLabel
+@onready var events_bar: HBoxContainer = $CardList/Margin/VBox/EventsBar
+
+@onready var settlement_panel: Panel = $Settlement
+@onready var settlement_title: Label = $Settlement/Margin/VBox/Title
+@onready var settlement_event_info: Label = $Settlement/Margin/VBox/EventInfo
+@onready var settlement_result: Label = $Settlement/Margin/VBox/Result
+@onready var settlement_diffs: Label = $Settlement/Margin/VBox/Diffs
+@onready var continue_button: Button = $Settlement/Margin/VBox/ContinueBtn
+
+@onready var end_overlay: Panel = $EndOverlay
+@onready var end_title_label: Label = $EndOverlay/VBox/TitleLabel
+@onready var end_text_label: Label = $EndOverlay/VBox/TextLabel
+@onready var restart_button: Button = $EndOverlay/VBox/RestartButton
+
+@onready var card_button: Button = $CardButton
+
+var event_panels: Array = []
+var cards_open: bool = false
 
 
 func _ready() -> void:
 	continue_button.pressed.connect(_on_continue_settlement)
 	restart_button.pressed.connect(_on_restart_pressed)
+	card_button.pressed.connect(_on_card_button_pressed)
 	GameState.start_new_game()
 	_build_event_panels()
-	refresh()
+	_refresh_main_scene()
 
 
 func _build_event_panels() -> void:
@@ -61,13 +71,98 @@ func _build_event_panels() -> void:
 		})
 
 
-func refresh() -> void:
-	round_label.text = "第 %d / %d 轮" % [GameState.round, GameState.MAX_ROUNDS]
-	mood_label.text = "心情: %d" % GameState.mood
-	harmony_label.text = "和睦: %d" % GameState.harmony
-	immunity_label.text = "免疫: %d" % GameState.immunity
-	supplies_label.text = "物资: %d" % GameState.supplies
+# ─────────────── 主场景渲染 ───────────────
+
+func _refresh_main_scene() -> void:
+	day_label.text = "Day %d / %d" % [GameState.day, GameState.MAX_DAYS]
+	card_list_day_label.text = "Day %d / %d" % [GameState.day, GameState.MAX_DAYS]
+	card_list_attr_label.text = "心情 %d · 和睦 %d · 免疫 %d · 物资 %d" % [
+		GameState.mood, GameState.harmony, GameState.immunity, GameState.supplies,
+	]
+	_render_family_status()
+	_render_attributes()
+
+
+func _render_family_status() -> void:
+	for child in family_status_box.get_children():
+		child.queue_free()
+	var status: Dictionary = GameState.get_family_status()
+	for member_name in ["爸爸", "妈妈", "儿子", "女儿"]:
+		var hbox := HBoxContainer.new()
+		hbox.add_theme_constant_override("separation", 12)
+		var name_label := Label.new()
+		name_label.text = member_name + ":"
+		name_label.add_theme_font_size_override("font_size", 18)
+		name_label.custom_minimum_size = Vector2(60, 0)
+		hbox.add_child(name_label)
+
+		var items: Array = status.get(member_name, [])
+		if items.is_empty():
+			var placeholder := Label.new()
+			placeholder.text = "(无标记)"
+			placeholder.add_theme_font_size_override("font_size", 15)
+			placeholder.add_theme_color_override("font_color", Color(0.55, 0.55, 0.6, 1))
+			hbox.add_child(placeholder)
+		else:
+			for it in items:
+				var tag := Label.new()
+				tag.text = ("✓ " if it["on"] else "○ ") + it["label"]
+				tag.add_theme_font_size_override("font_size", 15)
+				tag.add_theme_color_override("font_color",
+					Color(0.4, 0.75, 0.4, 1) if it["on"] else Color(0.55, 0.55, 0.6, 1))
+				hbox.add_child(tag)
+		family_status_box.add_child(hbox)
+
+
+func _render_attributes() -> void:
+	for child in attributes_box.get_children():
+		child.queue_free()
+	for key in ATTRS:
+		var label := Label.new()
+		var value: int = GameState[key]
+		var filled_count: int = value / 5
+		var empty_count: int = (100 - value) / 5
+		var bar: String = "█".repeat(filled_count) + "░".repeat(empty_count)
+		label.text = "%s: %s %d" % [GameState.get_attribute_label(key), bar, value]
+		label.add_theme_font_size_override("font_size", 17)
+		label.add_theme_color_override("font_color", _attr_color(value))
+		attributes_box.add_child(label)
+
+
+func _attr_color(value: int) -> Color:
+	if value <= 20: return Color(0.85, 0.4, 0.4)
+	if value <= 40: return Color(0.85, 0.7, 0.4)
+	if value <= 70: return Color(0.85, 0.85, 0.85)
+	return Color(0.5, 0.85, 0.55)
+
+
+# ─────────────── 卡牌展开/收起 ───────────────
+
+func _on_card_button_pressed() -> void:
+	if end_overlay.visible:
+		return
+	if cards_open:
+		_close_cards()
+	else:
+		_open_cards()
+
+
+func _open_cards() -> void:
+	cards_open = true
+	main_scene.visible = false
+	settlement_panel.visible = false
+	card_list.visible = true
+	card_button.text = "Close ▴"
 	_refresh_event_panels()
+
+
+func _close_cards() -> void:
+	cards_open = false
+	card_list.visible = false
+	settlement_panel.visible = false
+	main_scene.visible = true
+	card_button.text = "Cards ▾"
+	_refresh_main_scene()
 
 
 func _refresh_event_panels() -> void:
@@ -95,23 +190,18 @@ func _refresh_event_panels() -> void:
 			panel.visible = false
 
 
+# ─────────────── 选项/结算 ───────────────
+
 func _on_choose_option(event_idx: int, option_idx: int, visible_options: Array) -> void:
 	var ev: Dictionary = GameState.current_round_events[event_idx]
 	var opt: Dictionary = visible_options[option_idx]
-	var played_round: int = GameState.round
+	var played_day: int = GameState.day
 
 	var before: Dictionary = _snapshot_attributes()
 	GameState.apply_option(opt)
 	var diffs: Array = _compute_diffs(before)
 
-	if GameState.is_game_over():
-		_show_end(false)
-		return
-	if GameState.is_victory():
-		_show_end(true)
-		return
-
-	_show_settlement(played_round, ev["title"], opt["text"], GameState.last_result, diffs)
+	_show_settlement(played_day, ev["title"], opt["text"], GameState.last_result, diffs)
 
 
 func _snapshot_attributes() -> Dictionary:
@@ -137,8 +227,8 @@ func _compute_diffs(before: Dictionary) -> Array:
 	return diffs
 
 
-func _show_settlement(played_round: int, event_title: String, option_text: String, result_text: String, diffs: Array) -> void:
-	settlement_title.text = "第 %d 轮 · 结算" % played_round
+func _show_settlement(played_day: int, event_title: String, option_text: String, result_text: String, diffs: Array) -> void:
+	settlement_title.text = "第 %d 天 · 结算" % played_day
 	settlement_event_info.text = "事件: %s\n你的选择: %s" % [event_title, option_text]
 	settlement_result.text = result_text if result_text != "" else "(无特别描述)"
 
@@ -151,27 +241,35 @@ func _show_settlement(played_round: int, event_title: String, option_text: Strin
 			lines.append("  %s: %d → %d (%s%d)" % [d["name"], d["old"], d["new"], sign, int(d["delta"])])
 		settlement_diffs.text = "\n".join(lines)
 
-	events_bar.visible = false
+	card_list.visible = false
 	settlement_panel.visible = true
+	card_button.text = "Cards ▾"
 
 
 func _on_continue_settlement() -> void:
 	settlement_panel.visible = false
-	events_bar.visible = true
-	refresh()
+	if GameState.is_game_over():
+		_show_ending()
+		return
+	main_scene.visible = true
+	_refresh_main_scene()
 
 
-func _show_end(victory: bool) -> void:
+func _show_ending() -> void:
+	main_scene.visible = false
+	card_list.visible = false
 	settlement_panel.visible = false
-	events_bar.visible = false
+	card_button.visible = false
 	end_overlay.visible = true
-	if victory:
-		end_label.text = "🎉 你成功度过了疫情!\n家庭成员都健康地走过了这段日子。"
-	else:
-		end_label.text = "💀 这一次,你没能撑过去..."
+	var e: Dictionary = GameState.get_ending()
+	end_title_label.text = e["title"]
+	end_text_label.text = e["text"]
 
 
 func _on_restart_pressed() -> void:
 	end_overlay.visible = false
+	card_button.visible = true
+	cards_open = false
 	GameState.start_new_game()
-	refresh()
+	_refresh_event_panels()
+	_open_cards()

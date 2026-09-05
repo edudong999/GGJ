@@ -1,73 +1,145 @@
 [
   {
     "id": "lockdown",
-    "pool": "supplies",
+    "pool": "events",
     "title": "封城",
-    "description": "城市按下暂停键。窗外传来零星的喇叭声,小区门口的红色警戒线已经拉好。接下来怎么办?",
+    "description": "城市按下暂停键。紧锁的大门外,是空旷的街道。工作停摆,一切社交活动暂停。一家四口被迫全天候待在一起。奇怪的是,我突然发现,我已经很久没认真看过他们的脸了。",
+    "weight": 5,
+    "unique": true,
+    "force_day": [1],
+    "force_position": [1],
     "options": [
       {
-        "text": "囤积物资",
-        "effects": {"supplies": 20, "mood": -5},
-        "result": "你冲去超市搬回三箱泡面和两袋米。妻子看你满头大汗的样子,叹了口气。"
+        "text": "或许我可以修复一下亲子关系",
+        "effects": {"mood": -5, "harmony": 5},
+        "result": "我局促,也无奈。女儿高二,儿子初三,都是关键时候,线上学习,想都不敢想。"
       },
       {
-        "text": "相信政府,安心在家",
+        "text": "能活下来就是好事",
+        "effects": {"mood": 10, "harmony": -5},
+        "result": "对于孩子们来说,目前的处境就像一场梦,社会秩序突然被打乱重来。对于有一定社会经验的我来讲,其实也差不多。当生离死别真的出现,一切外物都不重要了,唯独希望的是家人平平安安。"
+      }
+    ]
+  },
+  {
+    "id": "group_buy",
+    "pool": "events",
+    "title": "接龙时间",
+    "description": "感谢社区志愿者,手机上便捷选择物资——虽然有什么、有多少并不确定。家人围坐,开始精挑细选。",
+    "weight": 5,
+    "force_day": [1, 5, 9, 13, 17],
+    "force_position": [2, 1, 1, 1, 1],
+    "options": [
+      {
+        "text": "选择肉类",
+        "effects": {"immunity": 10},
+        "result": "鲜肉入冰箱,一家人都安心了。"
+      },
+      {
+        "text": "选择外地捐赠水果",
+        "effects": {"immunity": 10},
+        "result": "稀有水果,孩子们第一次见,兴奋地拍照。"
+      },
+      {
+        "text": "选择绿叶菜",
+        "effects": {"immunity": 5},
+        "result": "绿叶菜是稀缺品,你抢到了几把。"
+      },
+      {
+        "text": "选择牛奶",
+        "effects": {"immunity": 5, "supplies": 5},
+        "result": "牛奶保质期不长,但孩子们能补补身体。"
+      },
+      {
+        "text": "选择鸡蛋",
+        "effects": {"eggs": 1, "immunity": 5},
+        "result": "鸡蛋一盒,妻子小心翼翼地放进冰箱。"
+      },
+      {
+        "text": "选择土豆花菜",
+        "effects": {"supplies": 10},
+        "result": "土豆耐存,花菜能撑一周。"
+      },
+      {
+        "text": "选择大白菜白萝卜",
+        "effects": {"supplies": 15},
+        "result": "白萝卜和大白菜是耐存王,够吃好几天。"
+      },
+      {
+        "text": "选择基础米面粮油",
+        "effects": {"supplies": 20},
+        "result": "米面粮油,最基本的保命物资。"
+      },
+      {
+        "text": "选择热干面便携装",
+        "effects": {"hot_noodles": 1, "mood": 5},
+        "result": "热干面是湖北特产,吃着格外亲切。"
+      }
+    ]
+  },
+  {
+    "id": "party_member",
+    "pool": "events",
+    "title": "党员突击队",
+    "description": "\"两队一网\"推行,单位抽调骨干党员召集起来成立了党员突击队。你自然成为了其中一员。很多人脱产派驻到社区,很显然,这是一个重要的任务。",
+    "weight": 5,
+    "unique": true,
+    "trigger": {"attribute": "day", "min": 7},
+    "options": [
+      {
+        "text": "服从安排",
+        "effects": {"harmony": 15, "duty": 1},
+        "result": "街道把我安排在了某小区值守,单位已经开了证明。三班倒24小时值守,从明天就要开始。这或许是个艰巨的任务,但却是我作为党员的责任。"
+      },
+      {
+        "text": "拒绝组织安排",
+        "effects": {"harmony": -10, "mood": -20, "duty": 0},
+        "result": "我告诉单位自己被感染了,其实我知道这不是真的。还好单位人手足够,勉强相信了我鬼话。我信奉安全至上,但是孩子们似乎不这么看。我第一次发现,责任并不是别人要求你承担的时候才存在。"
+      }
+    ]
+  },
+  {
+    "id": "routine_duty",
+    "pool": "events",
+    "title": "例行值守",
+    "description": "奉献的人是光荣的,承担着风险的家庭也是。每次回来,你会替换衣服并全身消毒,在门外等到酒精气味彻底消散才进家。你是合格的一家之主。",
+    "weight": 3,
+    "trigger": {"attribute": "duty", "equals": 1},
+    "options": [
+      {
+        "text": "今天也去值守",
+        "effects": {"immunity": -5, "harmony": 5},
+        "result": "不能开车,你只能步行或骑自行车过去。值守工作是无聊的,不过盒饭是个盼头。你不知道是谁做的,但是味道的确不错。"
+      },
+      {
+        "text": "太危险了,偶尔一次离岗也不会怎么样",
+        "effects": {"immunity": 5, "harmony": -15, "duty": 0},
+        "result": "很快受到了单位的批评。再往后,你再没有了离岗的理由。不过由于这一次批评,你自己也觉得自己不甚光荣。"
+      }
+    ]
+  },
+  {
+    "id": "escape",
+    "pool": "events",
+    "title": "漏网之鱼",
+    "description": "封锁在家,有人烦闷是自然的,但溜出家多少有点不应该。你今天打算去小区内部排查一下。",
+    "weight": 3,
+    "trigger": {"attribute": "duty", "equals": 1},
+    "options": [
+      {
+        "text": "走左边的小径",
+        "effects": {"mood": 5},
+        "result": "没什么意外发生。你朝居民楼向上望,每家每户的阳台满满当当晾满了衣服。是家人齐聚,共同渡过难关的时候,你想起自己的家庭,虽然吵闹不断,但是还是让你心底一阵柔软。"
+      },
+      {
+        "text": "走中间的围墙",
+        "effects": {"harmony": 5},
+        "result": "竟然真的让你逮到一个跑出来瞎遛达的。你离得远远的,示意他赶紧回去。"
+      },
+      {
+        "text": "走右边的大路",
         "effects": {"mood": 10, "harmony": 5},
-        "result": "一家四口围坐在客厅,女儿趴在窗台上数对面的楼有几层。妈妈泡了一壶茶。"
-      },
-      {
-        "text": "赶紧把家人接回来",
-        "effects": {"harmony": 15, "supplies": -5},
-        "result": "你开车绕了大半个城,把岳母接了过来。家里更挤了,但更暖了。"
-      }
-    ]
-  },
-  {
-    "id": "talk_heart",
-    "pool": "family",
-    "title": "谈心",
-    "description": "孩子贪玩是天性,作为父亲,你要负好责任。你打开小儿子的房门。",
-    "trigger": {"attribute": "mood", "min": 60},
-    "options": [
-      {
-        "text": "跟他说清楚利害关系",
-        "effects": {"mood": -10, "son_crisis": 0, "talked_with_son": 1},
-        "result": "你口干舌燥,也不知道他听进去了多少。本来想结合未来用心教育,却变成一场说教。儿子没有顶嘴,但也没多少回应。"
-      },
-      {
-        "text": "结合自身经验好好讲讲",
-        "effects": {"mood": 5, "son_crisis": 0, "talked_with_son": 1},
-        "result": "你告诉儿子,他虽然还小,但已经是一个男人了。结合多年经历,你希望他能懂。父亲不善言辞,但你是个善于沟通的爸爸。"
-      },
-      {
-        "text": "给他脸了,揍他一顿",
-        "effects": {"mood": -20, "harmony": -10},
-        "result": "小兔崽子天天不学好,一进来发现他又在打游戏!你实在忍不下去了,家庭开始了一场棍棒教育,鸡飞狗跳整层楼都听到了。"
-      }
-    ]
-  },
-  {
-    "id": "cake",
-    "pool": "family",
-    "title": "蛋糕",
-    "description": "妻子用矿泉水瓶做成的简易打蛋器配合着电饭煲,做出了封城这么久以来家里人吃的第一顿零嘴。",
-    "trigger": {"attribute": "mood", "max": 40},
-    "options": [
-      {
-        "text": "端着盘子递给还在赌气的儿子",
-        "effects": {"mood": 15, "supplies": -10, "immunity": 5, "son_crisis": 1},
-        "result": "今晚不在乎网课、考勤和线上测试,只是疫情中彼此依偎的家庭。"
-      },
-      {
-        "text": "真香!大家都尝尝",
-        "effects": {"mood": 5, "supplies": -10, "immunity": 5},
-        "result": "除了儿子,所有人都享受了这来之不易的一餐。妻子兴致盎然,你知道她不会只做这一次的。"
-      },
-      {
-        "text": "每个人都有份!",
-        "requires": {"attribute": "talked_with_son", "equals": 1},
-        "effects": {"mood": 5, "immunity": 5},
-        "result": "打蛋清真的很麻烦,在没有合适道具的情况下。但是大家分工合作,成果也属于了每个人。"
+        "result": "你仔细检查了每栋楼,虽然没逮到人,但认真的态度让大家都安心。"
       }
     ]
   },
@@ -75,7 +147,8 @@
     "id": "ask_help",
     "pool": "community",
     "title": "社区求助",
-    "description": "我们的物资不算贫乏,但也不怎么阔绰。女儿正是长身体的时间,没点营养可不行。你感觉她更容易累了,或许我们需要一顿像样的饭。",
+    "description": "我们的物资不算贫乏,但也不怎么阔绰。女儿正是长身体的时间,没点营养可不行。或许我们需要一顿像样的饭。",
+    "weight": 3,
     "trigger": {"attribute": "immunity", "max": 40},
     "options": [
       {
@@ -86,7 +159,7 @@
           {
             "requires": {"attribute": "harmony", "min": 60},
             "effects": {"mood": 15, "immunity": 15},
-            "result": "18楼的住户很快就回复了,他们家把一条鲫鱼放在了家门口。鱼汤很鲜美,这是一顿愉快的晚饭。看到女儿脸颊浮现出久违的笑容,你努力盘算着下一次还能送什么做回礼。"
+            "result": "18楼的住户很快就回复了,他们家把一条鲫鱼放在了家门口。鱼汤很鲜美,这是一顿愉快的晚饭。"
           },
           {
             "requires": {"attribute": "harmony", "max": 40},
@@ -103,48 +176,218 @@
     ]
   },
   {
-    "id": "online_class",
-    "pool": "family",
-    "title": "网课",
-    "description": "儿子的网课又要开始了,老师在群里点名,你听到耳机里传来游戏音效。怎么办?",
+    "id": "volunteer",
+    "pool": "community",
+    "title": "也是社区志愿者",
+    "description": "自己所在的社区开始招募更多的人手进行物资转运,这意味着社区的物资短缺终于得到缓解。志愿者,就意味着更大的几率被感染,你打算怎么办?",
+    "weight": 3,
+    "trigger": {"attribute": "day", "min": 10},
+    "force_not": [{"attribute": "duty", "equals": 1}],
     "options": [
       {
-        "text": "陪孩子一起听,做笔记",
-        "effects": {"mood": 5, "son_crisis": 0},
-        "result": "你搬了把椅子坐在儿子旁边,意外发现数学老师讲的题还挺有意思。儿子被盯着,只能老老实实听完。"
+        "text": "干活不嫌多,反正宅在家里也没什么好干的",
+        "effects": {"mood": 20, "harmony": 20, "immunity": -15, "is_volunteer": 1},
+        "result": "支持大家走到这里的,是最朴素的英雄情怀。灾难面前,普通人不再普通。你充满了斗志。"
       },
       {
-        "text": "让妈妈辅导",
-        "effects": {"mood": -5, "supplies": -5},
-        "result": "妈妈放下手里的活,戴上老花镜坐在电脑前。晚饭晚了一个小时,大家饿得咕咕叫。"
-      },
-      {
-        "text": "让孩子自己学",
-        "effects": {"son_crisis": 1, "mood": 5},
-        "result": "你关上房门,继续处理工作邮件。希望儿子能自觉,但心里总有些不踏实。"
+        "text": "能把值守工作做好已经不易",
+        "effects": {"mood": 10, "immunity": 5, "is_volunteer": 0},
+        "result": "一事精致,便能动人。你有任务,也有家庭。过度对外奉献算不算对孩子的不负责任?你选择了家庭。"
       }
     ]
   },
   {
-    "id": "supply_delivery",
-    "pool": "supplies",
-    "title": "物资配送",
-    "description": "小区群里通知,今天下午有政府配送的蔬菜包,数量有限。先到先得。",
+    "id": "difficulty",
+    "pool": "community",
+    "title": "困难",
+    "description": "新到的这批物资不仅分量不足,还都是坏菜烂叶。诚然志愿者只是中转,但还是难免会有居民朝你撒气。",
+    "weight": 3,
+    "trigger": {"attribute": "is_volunteer", "equals": 1},
     "options": [
       {
-        "text": "参加社区团购,加点钱买更多",
-        "effects": {"supplies": 15, "harmony": -5},
-        "result": "你抢到了两份蔬菜包,新鲜水灵。团长还多送了一袋土豆,说是感谢你之前帮忙搬东西。"
+        "text": "忽视,做好自己的事",
+        "effects": {"harmony": 5, "mood": 5},
+        "result": "中国这么多人,你当然没法让所有人满意。你越来越清楚自己做着正确的事。人与人之间的包容和善意总是这样让人动容。"
       },
       {
-        "text": "下楼排队去买",
-        "effects": {"supplies": 10, "immunity": -5},
-        "result": "排了四十分钟队,脚都站麻了。回来的时候有点咳嗽,妻子让你赶紧喝热水。"
+        "text": "据理力争",
+        "effects": {"harmony": -10},
+        "result": "你在群里把道理讲清楚,那个声音最大的账号偃旗息鼓了。不过自此以后,物资群里的氛围就微妙了起来,礼貌,但没了生机。"
       },
       {
-        "text": "不出门,等下次",
-        "effects": {"mood": -5, "immunity": 5},
-        "result": "你在群里回复 '不要了',关上手机。家里还剩点挂面,凑合几天吧。"
+        "text": "自己补足空缺",
+        "effects": {"supplies": -10},
+        "result": "你决定自己补足空缺。你盘算着家里还有什么可以拿出来的,妻子挑选好后却发现物资已经派发完了。社区管理跟你说,已经有人把缺少的蔬菜补上了。"
+      }
+    ]
+  },
+  {
+    "id": "talk_heart",
+    "pool": "family",
+    "title": "谈心",
+    "description": "孩子贪玩是天性,作为父亲,你要负好责任。你打开了小儿子的房门。",
+    "weight": 2,
+    "trigger": {"attribute": "mood", "min": 60},
+    "force_not": [{"attribute": "son_perfect", "equals": 1}],
+    "options": [
+      {
+        "text": "跟他说清楚利害关系",
+        "effects": {"mood": -10, "son_crisis": 0, "talked_with_son": 1},
+        "result": "你口干舌燥,也不知道他听进去了多少。儿子没有顶嘴,但也没多少回应。"
+      },
+      {
+        "text": "结合自身经验好好讲讲",
+        "effects": {"mood": 5, "son_crisis": 0, "talked_with_son": 1},
+        "result": "你告诉儿子,他虽然还小,但已经是一个男人了。结合多年经历,你希望他能懂。父亲不善言辞,但你是个善于沟通的爸爸。"
+      },
+      {
+        "text": "给他脸了",
+        "effects": {"mood": -20, "harmony": -10},
+        "result": "小兔崽子天天不学好,一进来发现他又在打游戏!你实在忍不下去了,家庭开始了一场棍棒教育,鸡飞狗跳整层楼都听到了。"
+      }
+    ]
+  },
+  {
+    "id": "cake",
+    "pool": "family",
+    "title": "蛋糕",
+    "description": "妻子用矿泉水瓶做成的简易打蛋器配合着电饭煲,做出了封城这么久以来家里人吃的第一顿零嘴。",
+    "weight": 3,
+    "trigger": {"attribute": "mood", "max": 40},
+    "force_requires": [{"attribute": "eggs", "equals": 1}],
+    "options": [
+      {
+        "text": "端着盘子递给还在赌气的儿子",
+        "effects": {"mood": 15, "supplies": -10, "immunity": 5, "son_crisis": 1},
+        "result": "今晚不在乎网课、考勤和线上测试,只是疫情中彼此依偎的家庭。"
+      },
+      {
+        "text": "真香!大家都尝尝",
+        "effects": {"mood": 5, "supplies": -10, "immunity": 5, "eggs": 0},
+        "result": "除了儿子,所有人都享受了这来之不易的一餐。"
+      },
+      {
+        "text": "每个人都有份!",
+        "requires": {"attribute": "talked_with_son", "equals": 1},
+        "effects": {"mood": 5, "immunity": 5, "eggs": 0},
+        "result": "打蛋清真的很麻烦,在没有合适道具的情况下。但是大家分工合作,成果也属于了每个人。"
+      }
+    ]
+  },
+  {
+    "id": "human_nature",
+    "pool": "family",
+    "title": "人之常情,吗?",
+    "description": "你推开儿子的房门,却发现本应该在学习的他正热火朝天地打着游戏。",
+    "weight": 3,
+    "options": [
+      {
+        "text": "你需要干预",
+        "requires": {"attribute": "son_crisis", "equals": 1},
+        "effects": {"mood": 5, "son_crisis": 0},
+        "result": "跟儿子再次约法三章,禁止他在白天关闭房门,晚上拿走电脑等等。"
+      },
+      {
+        "text": "他可以适当玩一玩",
+        "requires": {"attribute": "son_crisis", "equals": 0},
+        "effects": {"mood": 5, "son_crisis": 1},
+        "result": "他早晚要自己学会控制屏幕时长。"
+      }
+    ]
+  },
+  {
+    "id": "online_test",
+    "pool": "family",
+    "title": "线上测试",
+    "description": "搞什么?小儿子平时在学校也不算多强,也是全校30名以内的,这次线上测试直接到了150名开外。妻子焦急的不知道要怎么办了。",
+    "weight": 5,
+    "trigger": {"attribute": "son_crisis", "equals": 1},
+    "force_not": [{"attribute": "son_perfect", "equals": 1}],
+    "options": [
+      {
+        "text": "没收儿子所有电子设备,上课时全程陪同",
+        "effects": {"son_crisis": 0},
+        "result": "儿子意见很大,但是这是为了他好。"
+      },
+      {
+        "text": "检查儿子所有社交网络账户",
+        "effects": {"mood": -20, "son_crisis": 1},
+        "result": "我们大吵了一架。在后面几天时间,除了吃饭,儿子再也没有理过我们。"
+      },
+      {
+        "text": "询问事情原委",
+        "requires": {"attribute": "talked_with_son", "equals": 1},
+        "effects": {"mood": 20, "supplies": -10, "son_crisis": 0, "immunity": 5, "test_good_ending": 1},
+        "result": "儿子已经努力在学习,而且他什么都没有做错。我们仔细看了看成绩表,是的,几乎所有人的成绩都不正常。晚上家里其乐融融地大吃了一顿。"
+      }
+    ]
+  },
+  {
+    "id": "online_test_2",
+    "pool": "family",
+    "title": "线上测试2",
+    "description": "又一次测试快来了。儿子按部就班地学习,空闲之余我们也不苛求他。妻子也玩够了手机,天天拉我在客厅打羽毛球。",
+    "weight": 2,
+    "trigger": {"attribute": "test_good_ending", "equals": 1},
+    "force_not": [{"attribute": "son_perfect", "equals": 1}],
+    "options": [
+      {
+        "text": "鼓励儿子",
+        "effects": {"mood": 20, "son_perfect": 1},
+        "result": "儿子认真答了几天,新的考试系统并没有杜绝作弊。至少儿子没有作弊,我们为他感到骄傲。"
+      },
+      {
+        "text": "跟班主任反馈作弊问题",
+        "effects": {"mood": 15, "son_perfect": 1},
+        "result": "班主任很快回复,换了新的软件。儿子考的也不错,我们非常满意。"
+      }
+    ]
+  },
+  {
+    "id": "online_love",
+    "pool": "family",
+    "title": "网恋",
+    "description": "你无意瞥见女儿的手机,竟然发现她在跟网上的人发暧昧消息。你感觉全身的血都在往脑门上窜。",
+    "weight": 5,
+    "trigger": {"attribute": "account", "equals": 1},
+    "force_not": [{"attribute": "good_dad", "equals": 1}],
+    "options": [
+      {
+        "text": "再不训斥一顿就长歪了!",
+        "effects": {"supplies": -5, "account": 0},
+        "result": "你拍下全部内容,妻子迅速反应,揪着女儿就是劈头盖脸一顿骂起来。女儿眼里噙满泪水,两天后终于出门,妻子立即煮了满满一锅面条。你们还得知她跟那个账号只有这一个联系方式。"
+      },
+      {
+        "text": "你打算跟女儿好好聊聊",
+        "effects": {"account": 0},
+        "result": "女儿本来很激动,在你的劝说下也没了声音。你从聊天记录的蛛丝马迹找到线索一点点揉碎给她看。她缓慢拿起手机,在你眼前删掉了诈骗账号。"
+      },
+      {
+        "text": "每个人都有自己的事,别管了",
+        "effects": {"account": 1, "online_love_pending": 1},
+        "result": "你深呼吸,然后默默把手机放回原位。这是女儿的事,她总要自己学着办。"
+      }
+    ]
+  },
+  {
+    "id": "good_dad",
+    "pool": "family",
+    "title": "你是我的好爸爸",
+    "description": "今天你早起,却发现女儿也早就起床了,默默在沙发上温习课程。她看着你,欲言又止。",
+    "weight": 2,
+    "trigger": {"attribute": "account", "equals": 1},
+    "force_not": [{"attribute": "good_dad", "equals": 1}],
+    "options": [
+      {
+        "text": "你坐到她身旁,轻声询问她怎么回事",
+        "requires": {"attribute": "online_love_pending", "equals": 1},
+        "effects": {"good_dad": 1, "mood": 30, "online_love_pending": 0, "account": 0},
+        "result": "女儿终于说出了网恋被骗的事。你环住她的肩膀。女儿轻轻笑了,低声嘟囔了一句,\"你是我的好爸爸。\""
+      },
+      {
+        "text": "不是最好的时机",
+        "effects": {"mood": 5},
+        "result": "你去厨房做早饭,女儿安安静静地学习。多好的一个早晨。"
       }
     ]
   }

@@ -11,98 +11,154 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_main")
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="MainScene" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 24
+
+[node name="Margin" type="MarginContainer" parent="MainScene"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBox" type="VBoxContainer" parent="MainScene/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="DayLabel" type="Label" parent="MainScene/Margin/VBox"]
+layout_mode = 2
+text = "Day 1 / 20"
+theme_override_font_sizes/font_size = 28
+
+[node name="GameTitle" type="Label" parent="MainScene/Margin/VBox"]
+layout_mode = 2
+text = "Pandemic Survival — 疫情家庭生存"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.6, 0.6, 0.65, 1)
+
+[node name="HSep1" type="HSeparator" parent="MainScene/Margin/VBox"]
+layout_mode = 2
+
+[node name="FamilyLabel" type="Label" parent="MainScene/Margin/VBox"]
+layout_mode = 2
+text = "家庭成员 · 生长状态"
+theme_override_font_sizes/font_size = 18
+
+[node name="FamilyStatus" type="VBoxContainer" parent="MainScene/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HSep2" type="HSeparator" parent="MainScene/Margin/VBox"]
+layout_mode = 2
+
+[node name="AttrLabel" type="Label" parent="MainScene/Margin/VBox"]
+layout_mode = 2
+text = "家庭状态"
+theme_override_font_sizes/font_size = 18
+
+[node name="Attributes" type="VBoxContainer" parent="MainScene/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CardList" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="CardList"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 24
+theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 24
 
-[node name="VBox" type="VBoxContainer" parent="Margin"]
+[node name="VBox" type="VBoxContainer" parent="CardList/Margin"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="TopBar" type="HBoxContainer" parent="Margin/VBox"]
+[node name="TopBar" type="HBoxContainer" parent="CardList/Margin/VBox"]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="Margin/VBox/TopBar"]
+[node name="DayLabel" type="Label" parent="CardList/Margin/VBox/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Pandemic Survival — 疫情家庭生存"
-theme_override_font_sizes/font_size = 24
+text = "Day 1 / 20"
+theme_override_font_sizes/font_size = 22
 
-[node name="RoundLabel" type="Label" parent="Margin/VBox/TopBar"]
+[node name="AttrLabel" type="Label" parent="CardList/Margin/VBox/TopBar"]
 layout_mode = 2
-text = "第 1 / 20 轮"
-theme_override_font_sizes/font_size = 20
+text = "心情 50 · 和睦 50 · 免疫 50 · 物资 50"
+theme_override_font_sizes/font_size = 14
 horizontal_alignment = 2
 
-[node name="StatusBar" type="HBoxContainer" parent="Margin/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 24
-
-[node name="MoodLabel" type="Label" parent="Margin/VBox/StatusBar"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "心情: 50"
-theme_override_font_sizes/font_size = 18
-
-[node name="HarmonyLabel" type="Label" parent="Margin/VBox/StatusBar"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "和睦: 50"
-theme_override_font_sizes/font_size = 18
-
-[node name="ImmunityLabel" type="Label" parent="Margin/VBox/StatusBar"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "免疫: 50"
-theme_override_font_sizes/font_size = 18
-
-[node name="SuppliesLabel" type="Label" parent="Margin/VBox/StatusBar"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "物资: 50"
-theme_override_font_sizes/font_size = 18
-
-[node name="EventsBar" type="HBoxContainer" parent="Margin/VBox"]
+[node name="EventsBar" type="HBoxContainer" parent="CardList/Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="SettlementPanel" type="PanelContainer" parent="Margin/VBox"]
+[node name="Settlement" type="Panel" parent="."]
 visible = false
-layout_mode = 2
-size_flags_vertical = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="SettlementVBox" type="VBoxContainer" parent="Margin/VBox/SettlementPanel"]
-layout_mode = 2
-theme_override_constants/separation = 10
+[node name="Margin" type="MarginContainer" parent="Settlement"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 80
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 80
+theme_override_constants/margin_bottom = 40
 
-[node name="Title" type="Label" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+[node name="VBox" type="VBoxContainer" parent="Settlement/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Settlement/Margin/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 26
 horizontal_alignment = 1
-text = "第 1 轮 · 结算"
+text = "第 1 天 · 结算"
 
-[node name="HSep1" type="HSeparator" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+[node name="HSep1" type="HSeparator" parent="Settlement/Margin/VBox"]
 layout_mode = 2
 
-[node name="EventInfo" type="Label" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+[node name="EventInfo" type="Label" parent="Settlement/Margin/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 17
 horizontal_alignment = 1
-text = "事件: ...\n你的选择: ..."
+text = "事件: ..."
 
-[node name="HSep2" type="HSeparator" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+[node name="HSep2" type="HSeparator" parent="Settlement/Margin/VBox"]
 layout_mode = 2
 
-[node name="Result" type="Label" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+[node name="Result" type="Label" parent="Settlement/Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
 autowrap_mode = 3
@@ -110,23 +166,23 @@ theme_override_font_sizes/font_size = 17
 horizontal_alignment = 1
 text = "(结果)"
 
-[node name="HSep3" type="HSeparator" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+[node name="HSep3" type="HSeparator" parent="Settlement/Margin/VBox"]
 layout_mode = 2
 
-[node name="DiffsTitle" type="Label" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+[node name="DiffsTitle" type="Label" parent="Settlement/Margin/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "属性变化:"
 
-[node name="Diffs" type="Label" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+[node name="Diffs" type="Label" parent="Settlement/Margin/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 17
 text = "(无变化)"
 
-[node name="HSep4" type="HSeparator" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+[node name="HSep4" type="HSeparator" parent="Settlement/Margin/VBox"]
 layout_mode = 2
 
-[node name="ContinueBtn" type="Button" parent="Margin/VBox/SettlementPanel/SettlementVBox"]
+[node name="ContinueBtn" type="Button" parent="Settlement/Margin/VBox"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "继续 →"
@@ -141,30 +197,52 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="EndVBox" type="VBoxContainer" parent="EndOverlay"]
+[node name="VBox" type="VBoxContainer" parent="EndOverlay"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -260.0
-offset_top = -120.0
-offset_right = 260.0
-offset_bottom = 120.0
+offset_left = -320.0
+offset_top = -160.0
+offset_right = 320.0
+offset_bottom = 160.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 16
 alignment = 1
 
-[node name="EndLabel" type="Label" parent="EndOverlay/EndVBox"]
+[node name="TitleLabel" type="Label" parent="EndOverlay/VBox"]
 layout_mode = 2
-text = "游戏结束"
+text = "结局"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 28
-autowrap_mode = 3
+theme_override_font_sizes/font_size = 32
 
-[node name="RestartButton" type="Button" parent="EndOverlay/EndVBox"]
+[node name="TextLabel" type="Label" parent="EndOverlay/VBox"]
+layout_mode = 2
+text = "(结局描述)"
+horizontal_alignment = 1
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 17
+
+[node name="RestartButton" type="Button" parent="EndOverlay/VBox"]
 layout_mode = 2
 text = "重新开始"
 theme_override_font_sizes/font_size = 20
+
+[node name="CardButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -140.0
+offset_top = -64.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Cards ▾"
+theme_override_font_sizes/font_size = 18
