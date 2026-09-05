@@ -36,15 +36,6 @@ const SIDEBAR_COLLAPSED_WIDTH: int = 40
 @onready var end_badge: Button = $EndBadge
 
 @onready var card_button: Button = $CardButton
-@onready var menu_btn: Button = $MenuBtn
-@onready var menu_popup: Panel = $MenuPopup
-@onready var menu_continue_btn: Button = $MenuPopup/Margin/VBox/ContinueBtn
-@onready var menu_restart_btn: Button = $MenuPopup/Margin/VBox/RestartBtn
-@onready var menu_quit_btn: Button = $MenuPopup/Margin/VBox/QuitBtn
-
-@onready var start_screen: Panel = $StartScreen
-@onready var start_btn: Button = $StartScreen/VBox/StartBtn
-@onready var start_quit_btn: Button = $StartScreen/VBox/StartQuitBtn
 
 var event_panels: Array = []
 var cards_open: bool = false
@@ -58,15 +49,9 @@ func _ready() -> void:
 	end_badge.pressed.connect(_on_show_ending)
 	sidebar_toggle_btn.pressed.connect(_on_sidebar_toggle)
 	card_button.pressed.connect(_on_card_button_pressed)
-	menu_btn.pressed.connect(_on_menu_pressed)
-	menu_continue_btn.pressed.connect(_on_menu_continue)
-	menu_restart_btn.pressed.connect(_on_menu_restart)
-	menu_quit_btn.pressed.connect(_on_menu_quit)
-	start_btn.pressed.connect(_on_start_pressed)
-	start_quit_btn.pressed.connect(_on_menu_quit)
 	GameState.start_new_game()
 	_build_event_panels()
-	_show_start_screen()
+	_refresh_main_scene()
 
 
 func _build_event_panels() -> void:
@@ -98,56 +83,6 @@ func _build_event_panels() -> void:
 			"desc": desc,
 			"options_container": opts,
 		})
-
-
-# ─────────────── 启动 / 菜单 ───────────────
-
-func _show_start_screen() -> void:
-	main_scene.visible = false
-	card_list.visible = false
-	settlement_panel.visible = false
-	end_overlay.visible = false
-	end_badge.visible = false
-	card_button.visible = false
-	menu_popup.visible = false
-	start_screen.visible = true
-
-
-func _on_start_pressed() -> void:
-	start_screen.visible = false
-	main_scene.visible = true
-	card_button.visible = true
-	cards_open = false
-	_refresh_main_scene()
-
-
-func _on_menu_pressed() -> void:
-	menu_popup.visible = not menu_popup.visible
-
-
-func _on_menu_continue() -> void:
-	menu_popup.visible = false
-
-
-func _on_menu_restart() -> void:
-	menu_popup.visible = false
-	_restart_to_start()
-
-
-func _on_menu_quit() -> void:
-	get_tree().quit()
-
-
-func _restart_to_start() -> void:
-	end_overlay.visible = false
-	end_badge.visible = false
-	card_list.visible = false
-	settlement_panel.visible = false
-	card_button.visible = false
-	cards_open = false
-	GameState.start_new_game()
-	_refresh_event_panels()
-	_show_start_screen()
 
 
 # ─────────────── 主场景渲染 ───────────────
@@ -401,7 +336,6 @@ func _show_ending() -> void:
 	card_button.visible = false
 	end_overlay.visible = true
 	end_badge.visible = false
-	menu_popup.visible = false
 	var e: Dictionary = GameState.get_ending()
 	end_title_label.text = e["title"]
 	end_text_label.text = e["text"]
@@ -445,4 +379,10 @@ func _on_show_ending() -> void:
 
 
 func _on_restart_pressed() -> void:
-	_restart_to_start()
+	end_overlay.visible = false
+	end_badge.visible = false
+	card_button.visible = true
+	cards_open = false
+	GameState.start_new_game()
+	_refresh_event_panels()
+	_open_cards()
