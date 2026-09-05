@@ -199,25 +199,27 @@ func _render_attributes() -> void:
 	for key in ATTRS:
 		var box := PanelContainer.new()
 		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var vbox := VBoxContainer.new()
-		vbox.add_theme_constant_override("separation", 4)
-		box.add_child(vbox)
-
-		var name_label := Label.new()
-		name_label.text = GameState.get_attribute_label(key)
-		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		name_label.add_theme_font_size_override("font_size", 15)
-		vbox.add_child(name_label)
+		var hbox := HBoxContainer.new()
+		hbox.add_theme_constant_override("separation", 8)
+		box.add_child(hbox)
 
 		var value: int = GameState[key]
 		var color: Color = _attr_color(value)
 
+		var name_label := Label.new()
+		name_label.text = GameState.get_attribute_label(key)
+		name_label.add_theme_font_size_override("font_size", 16)
+		name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		hbox.add_child(name_label)
+
 		var value_label := Label.new()
 		value_label.text = "%d" % value
+		value_label.custom_minimum_size = Vector2(40, 0)
 		value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		value_label.add_theme_font_size_override("font_size", 26)
+		value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		value_label.add_theme_font_size_override("font_size", 22)
 		value_label.add_theme_color_override("font_color", color)
-		vbox.add_child(value_label)
+		hbox.add_child(value_label)
 
 		var bar := ProgressBar.new()
 		bar.min_value = 0
@@ -225,6 +227,8 @@ func _render_attributes() -> void:
 		bar.value = value
 		bar.show_percentage = false
 		bar.custom_minimum_size = Vector2(0, 10)
+		bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 
 		var bg_style := StyleBoxFlat.new()
 		bg_style.bg_color = Color(0.18, 0.18, 0.22)
@@ -242,7 +246,7 @@ func _render_attributes() -> void:
 		fill_style.corner_radius_bottom_right = 3
 		bar.add_theme_stylebox_override("fill", fill_style)
 
-		vbox.add_child(bar)
+		hbox.add_child(bar)
 		attr_row.add_child(box)
 
 
@@ -442,4 +446,3 @@ func _on_show_ending() -> void:
 
 func _on_restart_pressed() -> void:
 	_restart_to_start()
-	# 结局页面的「重新开始」直接回到开始界面,与菜单一致
