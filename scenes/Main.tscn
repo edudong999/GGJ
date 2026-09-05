@@ -27,43 +27,98 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 32
+theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 32
+theme_override_constants/margin_bottom = 24
 
 [node name="VBox" type="VBoxContainer" parent="MainScene/Margin"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 12
 
-[node name="DayLabel" type="Label" parent="MainScene/Margin/VBox"]
+[node name="TopBar" type="HBoxContainer" parent="MainScene/Margin/VBox"]
 layout_mode = 2
-text = "Day 1 / 20"
+theme_override_constants/separation = 12
+
+[node name="DayCell" type="PanelContainer" parent="MainScene/Margin/VBox/TopBar"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="MainScene/Margin/VBox/TopBar/DayCell"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="DayTitle" type="Label" parent="MainScene/Margin/VBox/TopBar/DayCell/VBox"]
+layout_mode = 2
+text = "Day"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.55, 0.55, 0.6, 1)
+
+[node name="DayValue" type="Label" parent="MainScene/Margin/VBox/TopBar/DayCell/VBox"]
+layout_mode = 2
+text = "1 / 20"
+horizontal_alignment = 1
 theme_override_font_sizes/font_size = 28
 
-[node name="GameTitle" type="Label" parent="MainScene/Margin/VBox"]
+[node name="AttrRow" type="HBoxContainer" parent="MainScene/Margin/VBox/TopBar"]
 layout_mode = 2
-text = "Pandemic Survival — 疫情家庭生存"
-theme_override_font_sizes/font_size = 18
-theme_override_colors/font_color = Color(0.6, 0.6, 0.65, 1)
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
 
-[node name="HSep1" type="HSeparator" parent="MainScene/Margin/VBox"]
-layout_mode = 2
-
-[node name="AttrRow" type="HBoxContainer" parent="MainScene/Margin/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="HSep2" type="HSeparator" parent="MainScene/Margin/VBox"]
+[node name="HSep" type="HSeparator" parent="MainScene/Margin/VBox"]
 layout_mode = 2
 
-[node name="FamilyLabel" type="Label" parent="MainScene/Margin/VBox"]
+[node name="Body" type="HBoxContainer" parent="MainScene/Margin/VBox"]
 layout_mode = 2
-text = "家庭成员 · 生长状态"
-theme_override_font_sizes/font_size = 18
+size_flags_vertical = 3
+theme_override_constants/separation = 12
 
-[node name="FamilyStatus" type="VBoxContainer" parent="MainScene/Margin/VBox"]
+[node name="Sidebar" type="Panel" parent="MainScene/Margin/VBox/Body"]
+layout_mode = 2
+custom_minimum_size = Vector2(260, 0)
+size_flags_vertical = 3
+
+[node name="Margin" type="MarginContainer" parent="MainScene/Margin/VBox/Body/Sidebar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="MainScene/Margin/VBox/Body/Sidebar/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Header" type="HBoxContainer" parent="MainScene/Margin/VBox/Body/Sidebar/Margin/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="MainScene/Margin/VBox/Body/Sidebar/Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "家庭成员 · 状态"
+theme_override_font_sizes/font_size = 16
+
+[node name="ToggleBtn" type="Button" parent="MainScene/Margin/VBox/Body/Sidebar/Margin/VBox/Header"]
+layout_mode = 2
+custom_minimum_size = Vector2(36, 0)
+text = "◀"
+theme_override_font_sizes/font_size = 16
+
+[node name="SidebarBody" type="VBoxContainer" parent="MainScene/Margin/VBox/Body/Sidebar/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="Content" type="Control" parent="MainScene/Margin/VBox/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="CardList" type="Panel" parent="."]
 visible = false

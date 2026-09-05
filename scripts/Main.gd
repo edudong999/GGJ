@@ -2,11 +2,17 @@ extends Control
 
 const EVENTS_PER_ROUND: int = 3
 const ATTRS: Array = ["mood", "harmony", "immunity", "supplies"]
+const SIDEBAR_EXPANDED_WIDTH: int = 260
+const SIDEBAR_COLLAPSED_WIDTH: int = 40
 
 @onready var main_scene: Panel = $MainScene
-@onready var day_label: Label = $MainScene/Margin/VBox/DayLabel
-@onready var family_status_box: VBoxContainer = $MainScene/Margin/VBox/FamilyStatus
-@onready var attr_row: HBoxContainer = $MainScene/Margin/VBox/AttrRow
+@onready var day_value_label: Label = $MainScene/Margin/VBox/TopBar/DayCell/VBox/DayValue
+@onready var attr_row: HBoxContainer = $MainScene/Margin/VBox/TopBar/AttrRow
+
+@onready var sidebar: Panel = $MainScene/Margin/VBox/Body/Sidebar
+@onready var sidebar_title: Label = $MainScene/Margin/VBox/Body/Sidebar/Margin/VBox/Header/Title
+@onready var sidebar_body: VBoxContainer = $MainScene/Margin/VBox/Body/Sidebar/Margin/VBox/SidebarBody
+@onready var sidebar_toggle_btn: Button = $MainScene/Margin/VBox/Body/Sidebar/Margin/VBox/Header/ToggleBtn
 
 @onready var card_list: Panel = $CardList
 @onready var card_list_day_label: Label = $CardList/Margin/VBox/TopBar/DayLabel
@@ -31,6 +37,7 @@ const ATTRS: Array = ["mood", "harmony", "immunity", "supplies"]
 
 var event_panels: Array = []
 var cards_open: bool = false
+var sidebar_collapsed: bool = false
 
 
 func _ready() -> void:
@@ -38,6 +45,7 @@ func _ready() -> void:
 	restart_button.pressed.connect(_on_restart_pressed)
 	collapse_button.pressed.connect(_on_collapse_ending)
 	end_badge.pressed.connect(_on_show_ending)
+	sidebar_toggle_btn.pressed.connect(_on_sidebar_toggle)
 	card_button.pressed.connect(_on_card_button_pressed)
 	GameState.start_new_game()
 	_build_event_panels()
@@ -78,7 +86,7 @@ func _build_event_panels() -> void:
 # ─────────────── 主场景渲染 ───────────────
 
 func _refresh_main_scene() -> void:
-	day_label.text = "Day %d / %d" % [GameState.day, GameState.MAX_DAYS]
+	day_value_label.text = "Day %d / %d" % [GameState.day, GameState.MAX_DAYS]
 	card_list_day_label.text = "Day %d / %d" % [GameState.day, GameState.MAX_DAYS]
 	card_list_attr_label.text = "心情 %d · 和睦 %d · 免疫 %d · 物资 %d" % [
 		GameState.mood, GameState.harmony, GameState.immunity, GameState.supplies,
@@ -88,34 +96,34 @@ func _refresh_main_scene() -> void:
 
 
 func _render_family_status() -> void:
-	for child in family_status_box.get_children():
+	for child in sidebar_body.get_children():
 		child.queue_free()
 	var status: Dictionary = GameState.get_family_status()
 	for member_name in ["爸爸", "妈妈", "儿子", "女儿"]:
-		var hbox := HBoxContainer.new()
-		hbox.add_theme_constant_override("separation", 12)
+		var member_box := VBoxContainer.new()
+		member_box.add_theme_constant_override("separation", 4)
+
 		var name_label := Label.new()
-		name_label.text = member_name + ":"
+		name_label.text = member_name
 		name_label.add_theme_font_size_override("font_size", 18)
-		name_label.custom_minimum_size = Vector2(60, 0)
-		hbox.add_child(name_label)
+		member_box.add_child(name_label)
 
 		var items: Array = status.get(member_name, [])
 		if items.is_empty():
 			var placeholder := Label.new()
-			placeholder.text = "(无标记)"
-			placeholder.add_theme_font_size_override("font_size", 15)
+			placeholder.text = "  (无标记)"
+			placeholder.add_theme_font_size_override("font_size", 14)
 			placeholder.add_theme_color_override("font_color", Color(0.55, 0.55, 0.6, 1))
-			hbox.add_child(placeholder)
+			member_box.add_child(placeholder)
 		else:
 			for it in items:
 				var tag := Label.new()
-				tag.text = ("✓ " if it["on"] else "○ ") + it["label"]
-				tag.add_theme_font_size_override("font_size", 15)
+				tag.text = ("  ✓ " if it["on"] else "  ○ ") + it["label"]
+				tag.add_theme_font_size_override("font_size", 14)
 				tag.add_theme_color_override("font_color",
 					Color(0.4, 0.75, 0.4, 1) if it["on"] else Color(0.55, 0.55, 0.6, 1))
-				hbox.add_child(tag)
-		family_status_box.add_child(hbox)
+				member_box.add_child(tag)
+		sidebar_body.add_child(member_box)
 
 
 func _render_attributes() -> void:
@@ -158,6 +166,22 @@ func _attr_color(value: int) -> Color:
 	if value <= 40: return Color(0.85, 0.7, 0.4)
 	if value <= 70: return Color(0.85, 0.85, 0.85)
 	return Color(0.5, 0.85, 0.55)
+
+
+# ─────────────── 侧边栏 ───────────────
+
+func _on_sidebar_toggle() -> void:
+	sidebar_collapsed = not sidebar_collapsed
+	if sidebar_collapsed:
+		sidebar.custom_minimum_size = Vector2(SIDEBAR_COLLAPSED_WIDTH, 0)
+		sidebar_body.visible = false
+		sidebar_title.visible = false
+		sidebar_toggle_btn.text = "▶"
+	else:
+		sidebar.custom_minimum_size = Vector2(SIDEBAR_EXPANDED_WIDTH, 0)
+		sidebar_body.visible = true
+		sidebar_title.visible = true
+		sidebar_toggle_btn.text = "◀"
 
 
 # ─────────────── 卡牌展开/收起 ───────────────
