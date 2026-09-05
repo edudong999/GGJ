@@ -49,24 +49,19 @@ theme_override_colors/font_color = Color(0.6, 0.6, 0.65, 1)
 [node name="HSep1" type="HSeparator" parent="MainScene/Margin/VBox"]
 layout_mode = 2
 
+[node name="AttrRow" type="HBoxContainer" parent="MainScene/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="HSep2" type="HSeparator" parent="MainScene/Margin/VBox"]
+layout_mode = 2
+
 [node name="FamilyLabel" type="Label" parent="MainScene/Margin/VBox"]
 layout_mode = 2
 text = "家庭成员 · 生长状态"
 theme_override_font_sizes/font_size = 18
 
 [node name="FamilyStatus" type="VBoxContainer" parent="MainScene/Margin/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="HSep2" type="HSeparator" parent="MainScene/Margin/VBox"]
-layout_mode = 2
-
-[node name="AttrLabel" type="Label" parent="MainScene/Margin/VBox"]
-layout_mode = 2
-text = "家庭状态"
-theme_override_font_sizes/font_size = 18
-
-[node name="Attributes" type="VBoxContainer" parent="MainScene/Margin/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
@@ -226,7 +221,17 @@ horizontal_alignment = 1
 autowrap_mode = 3
 theme_override_font_sizes/font_size = 17
 
-[node name="RestartButton" type="Button" parent="EndOverlay/VBox"]
+[node name="ButtonRow" type="HBoxContainer" parent="EndOverlay/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="CollapseBtn" type="Button" parent="EndOverlay/VBox/ButtonRow"]
+layout_mode = 2
+text = "收起 ▾"
+theme_override_font_sizes/font_size = 18
+
+[node name="RestartButton" type="Button" parent="EndOverlay/VBox/ButtonRow"]
 layout_mode = 2
 text = "重新开始"
 theme_override_font_sizes/font_size = 20
@@ -246,3 +251,18 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "Cards ▾"
 theme_override_font_sizes/font_size = 18
+
+[node name="EndBadge" type="Button" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -240.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = 64.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "结局 ▴ 展开"
+theme_override_font_sizes/font_size = 16

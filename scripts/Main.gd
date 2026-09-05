@@ -6,7 +6,7 @@ const ATTRS: Array = ["mood", "harmony", "immunity", "supplies"]
 @onready var main_scene: Panel = $MainScene
 @onready var day_label: Label = $MainScene/Margin/VBox/DayLabel
 @onready var family_status_box: VBoxContainer = $MainScene/Margin/VBox/FamilyStatus
-@onready var attributes_box: VBoxContainer = $MainScene/Margin/VBox/Attributes
+@onready var attr_row: HBoxContainer = $MainScene/Margin/VBox/AttrRow
 
 @onready var card_list: Panel = $CardList
 @onready var card_list_day_label: Label = $CardList/Margin/VBox/TopBar/DayLabel
@@ -23,7 +23,9 @@ const ATTRS: Array = ["mood", "harmony", "immunity", "supplies"]
 @onready var end_overlay: Panel = $EndOverlay
 @onready var end_title_label: Label = $EndOverlay/VBox/TitleLabel
 @onready var end_text_label: Label = $EndOverlay/VBox/TextLabel
-@onready var restart_button: Button = $EndOverlay/VBox/RestartButton
+@onready var collapse_button: Button = $EndOverlay/VBox/ButtonRow/CollapseBtn
+@onready var restart_button: Button = $EndOverlay/VBox/ButtonRow/RestartButton
+@onready var end_badge: Button = $EndBadge
 
 @onready var card_button: Button = $CardButton
 
@@ -34,6 +36,8 @@ var cards_open: bool = false
 func _ready() -> void:
 	continue_button.pressed.connect(_on_continue_settlement)
 	restart_button.pressed.connect(_on_restart_pressed)
+	collapse_button.pressed.connect(_on_collapse_ending)
+	end_badge.pressed.connect(_on_show_ending)
 	card_button.pressed.connect(_on_card_button_pressed)
 	GameState.start_new_game()
 	_build_event_panels()
@@ -115,18 +119,38 @@ func _render_family_status() -> void:
 
 
 func _render_attributes() -> void:
-	for child in attributes_box.get_children():
+	for child in attr_row.get_children():
 		child.queue_free()
 	for key in ATTRS:
-		var label := Label.new()
+		var box := PanelContainer.new()
+		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var vbox := VBoxContainer.new()
+		vbox.add_theme_constant_override("separation", 2)
+		box.add_child(vbox)
+
+		var name_label := Label.new()
+		name_label.text = GameState.get_attribute_label(key)
+		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		name_label.add_theme_font_size_override("font_size", 16)
+		vbox.add_child(name_label)
+
 		var value: int = GameState[key]
+		var value_label := Label.new()
+		value_label.text = "%d" % value
+		value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		value_label.add_theme_font_size_override("font_size", 26)
+		value_label.add_theme_color_override("font_color", _attr_color(value))
+		vbox.add_child(value_label)
+
 		var filled_count: int = value / 5
 		var empty_count: int = (100 - value) / 5
-		var bar: String = "█".repeat(filled_count) + "░".repeat(empty_count)
-		label.text = "%s: %s %d" % [GameState.get_attribute_label(key), bar, value]
-		label.add_theme_font_size_override("font_size", 17)
-		label.add_theme_color_override("font_color", _attr_color(value))
-		attributes_box.add_child(label)
+		var bar_label := Label.new()
+		bar_label.text = "█".repeat(filled_count) + "░".repeat(empty_count)
+		bar_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		bar_label.add_theme_font_size_override("font_size", 12)
+		vbox.add_child(bar_label)
+
+		attr_row.add_child(box)
 
 
 func _attr_color(value: int) -> Color:
@@ -261,13 +285,29 @@ func _show_ending() -> void:
 	settlement_panel.visible = false
 	card_button.visible = false
 	end_overlay.visible = true
+	end_badge.visible = false
 	var e: Dictionary = GameState.get_ending()
 	end_title_label.text = e["title"]
 	end_text_label.text = e["text"]
+	end_badge.text = "结局: %s ▴ 展开" % e["title"]
+
+
+func _on_collapse_ending() -> void:
+	end_overlay.visible = false
+	end_badge.visible = true
+	main_scene.visible = true
+	_refresh_main_scene()
+
+
+func _on_show_ending() -> void:
+	main_scene.visible = false
+	end_overlay.visible = true
+	end_badge.visible = false
 
 
 func _on_restart_pressed() -> void:
 	end_overlay.visible = false
+	end_badge.visible = false
 	card_button.visible = true
 	cards_open = false
 	GameState.start_new_game()
