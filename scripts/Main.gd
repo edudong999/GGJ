@@ -27,6 +27,8 @@ const SIDEBAR_COLLAPSED_WIDTH: int = 40
 @onready var continue_button: Button = $Settlement/Margin/VBox/ContinueBtn
 
 @onready var end_overlay: Panel = $EndOverlay
+@onready var end_photo_bg: ColorRect = $EndOverlay/VBox/Photo/PhotoBg
+@onready var end_photo_label: Label = $EndOverlay/VBox/Photo/PhotoLabel
 @onready var end_title_label: Label = $EndOverlay/VBox/TitleLabel
 @onready var end_text_label: Label = $EndOverlay/VBox/TextLabel
 @onready var collapse_button: Button = $EndOverlay/VBox/ButtonRow/CollapseBtn
@@ -34,6 +36,15 @@ const SIDEBAR_COLLAPSED_WIDTH: int = 40
 @onready var end_badge: Button = $EndBadge
 
 @onready var card_button: Button = $CardButton
+@onready var menu_btn: Button = $MenuBtn
+@onready var menu_popup: Panel = $MenuPopup
+@onready var menu_continue_btn: Button = $MenuPopup/Margin/VBox/ContinueBtn
+@onready var menu_restart_btn: Button = $MenuPopup/Margin/VBox/RestartBtn
+@onready var menu_quit_btn: Button = $MenuPopup/Margin/VBox/QuitBtn
+
+@onready var start_screen: Panel = $StartScreen
+@onready var start_btn: Button = $StartScreen/VBox/StartBtn
+@onready var start_quit_btn: Button = $StartScreen/VBox/StartQuitBtn
 
 var event_panels: Array = []
 var cards_open: bool = false
@@ -47,9 +58,15 @@ func _ready() -> void:
 	end_badge.pressed.connect(_on_show_ending)
 	sidebar_toggle_btn.pressed.connect(_on_sidebar_toggle)
 	card_button.pressed.connect(_on_card_button_pressed)
+	menu_btn.pressed.connect(_on_menu_pressed)
+	menu_continue_btn.pressed.connect(_on_menu_continue)
+	menu_restart_btn.pressed.connect(_on_menu_restart)
+	menu_quit_btn.pressed.connect(_on_menu_quit)
+	start_btn.pressed.connect(_on_start_pressed)
+	start_quit_btn.pressed.connect(_on_menu_quit)
 	GameState.start_new_game()
 	_build_event_panels()
-	_refresh_main_scene()
+	_show_start_screen()
 
 
 func _build_event_panels() -> void:
@@ -81,6 +98,56 @@ func _build_event_panels() -> void:
 			"desc": desc,
 			"options_container": opts,
 		})
+
+
+# ─────────────── 启动 / 菜单 ───────────────
+
+func _show_start_screen() -> void:
+	main_scene.visible = false
+	card_list.visible = false
+	settlement_panel.visible = false
+	end_overlay.visible = false
+	end_badge.visible = false
+	card_button.visible = false
+	menu_popup.visible = false
+	start_screen.visible = true
+
+
+func _on_start_pressed() -> void:
+	start_screen.visible = false
+	main_scene.visible = true
+	card_button.visible = true
+	cards_open = false
+	_refresh_main_scene()
+
+
+func _on_menu_pressed() -> void:
+	menu_popup.visible = not menu_popup.visible
+
+
+func _on_menu_continue() -> void:
+	menu_popup.visible = false
+
+
+func _on_menu_restart() -> void:
+	menu_popup.visible = false
+	_restart_to_start()
+
+
+func _on_menu_quit() -> void:
+	get_tree().quit()
+
+
+func _restart_to_start() -> void:
+	end_overlay.visible = false
+	end_badge.visible = false
+	card_list.visible = false
+	settlement_panel.visible = false
+	card_button.visible = false
+	cards_open = false
+	GameState.start_new_game()
+	_refresh_event_panels()
+	_show_start_screen()
 
 
 # ─────────────── 主场景渲染 ───────────────
@@ -303,6 +370,8 @@ func _on_continue_settlement() -> void:
 	_refresh_main_scene()
 
 
+# ─────────────── 结局 ───────────────
+
 func _show_ending() -> void:
 	main_scene.visible = false
 	card_list.visible = false
@@ -310,10 +379,34 @@ func _show_ending() -> void:
 	card_button.visible = false
 	end_overlay.visible = true
 	end_badge.visible = false
+	menu_popup.visible = false
 	var e: Dictionary = GameState.get_ending()
 	end_title_label.text = e["title"]
 	end_text_label.text = e["text"]
+	_apply_ending_photo(e["title"])
 	end_badge.text = "结局: %s ▴ 展开" % e["title"]
+
+
+func _apply_ending_photo(title: String) -> void:
+	match title:
+		"在结束的那一天":
+			end_photo_bg.color = Color(0.95, 0.82, 0.35, 1)
+			end_photo_label.text = "圆"
+		"平庸却坚定的结局":
+			end_photo_bg.color = Color(0.72, 0.66, 0.5, 1)
+			end_photo_label.text = "稳"
+		"还好有政府":
+			end_photo_bg.color = Color(0.4, 0.55, 0.72, 1)
+			end_photo_label.text = "援"
+		"离开":
+			end_photo_bg.color = Color(0.55, 0.28, 0.28, 1)
+			end_photo_label.text = "去"
+		"需要医院":
+			end_photo_bg.color = Color(0.45, 0.65, 0.55, 1)
+			end_photo_label.text = "医"
+		_:
+			end_photo_bg.color = Color(0.3, 0.3, 0.4, 1)
+			end_photo_label.text = "?"
 
 
 func _on_collapse_ending() -> void:
@@ -330,10 +423,5 @@ func _on_show_ending() -> void:
 
 
 func _on_restart_pressed() -> void:
-	end_overlay.visible = false
-	end_badge.visible = false
-	card_button.visible = true
-	cards_open = false
-	GameState.start_new_game()
-	_refresh_event_panels()
-	_open_cards()
+	_restart_to_start()
+	# 结局页面的「重新开始」直接回到开始界面,与菜单一致

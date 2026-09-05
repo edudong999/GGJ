@@ -255,10 +255,11 @@ func _apply_single_effect(key: String, value: int) -> void:
 
 
 func _advance_day() -> void:
-	if day < MAX_DAYS:
-		day += 1
+	day += 1
+	if day <= MAX_DAYS:
 		pick_day_events()
-	# 最后一天不再抽事件,等下次 apply_option 后 day=MAX_DAYS+1,is_game_over 会触发
+	else:
+		current_round_events = []
 
 
 # ─────────────── 结局判定 ───────────────
